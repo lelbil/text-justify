@@ -28,8 +28,7 @@ app.post('/api/register', validateBody, async (req, res) => {
 
 app.post('/api/token', validateBody, doesUserExist, async (req, res) => {
     const { _id: id, email } = req.userObject
-//TODO: change
-    const token = jwt.sign({id, email}, process.env.SECRET || 'changeThis', { expiresIn: 24 * 3600 })
+    const token = jwt.sign({id, email}, process.env.SECRET, { expiresIn: 24 * 3600 })
 
     res.status(200).json({ token })
 })

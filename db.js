@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const dbURI = process.env.DB_URI || 'mongodb://localhost/justify'
+const dbURI = process.env.DB_URI
 mongoose.connect(dbURI)
 
 const userSchema = new mongoose.Schema({

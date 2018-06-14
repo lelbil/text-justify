@@ -18,8 +18,7 @@ exports.validateBody = (req, res, next) => {
 
 exports.verifyJWT = (req, res, next) => {
     const token = req.headers['x-access-token']
-//TODO: change
-    const { email } = jwt.verify(token, process.env.SECRET || 'changeThis')
+    const { email } = jwt.verify(token, process.env.SECRET)
 
     req.verifiedJWTEmail = email
     next()
