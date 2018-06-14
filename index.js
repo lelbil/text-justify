@@ -34,7 +34,7 @@ app.post('/api/token', validateBody, doesUserExist, async (req, res) => {
     res.status(200).json({ token })
 })
 
-app.post('/api/justify', verifyJWT, limitRate, (req, res) => {
+app.post('/api/justify', verifyJWT, limitRate, async (req, res) => {
     const text = req.body
     const howManyWords = count(text)
 
@@ -42,6 +42,8 @@ app.post('/api/justify', verifyJWT, limitRate, (req, res) => {
         return res.status(402).json("This texts length (in words) exceeds remaining rate (you are under a free version)")
     }
 
+    const remaining = req.remainingReset ? 80000 - howManyWords : req.userObject.remaining - howManyWords
+    await User.update({_id: req.userObject._id}, { remaining })
     res.status(200).end(justify(text))
 })
 

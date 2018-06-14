@@ -41,10 +41,19 @@ exports.doesUserExist = async (req, res, next) => {
 }
 
 exports.limitRate = (req, res, next) => {
-    exports.doesUserExist(req, res, () => {
+    exports.doesUserExist(req, res, async () => {
         const { userObject } = req
+        const someDate = userObject.lastTokenCreationDate
+        const now = new Date()
 
-        if (userObject.remaining < 0) {
+        if (!(someDate.getFullYear() === now.getFullYear() &&
+            someDate.getMonth() === now.getMonth() &&
+            someDate.getDate() === now.getDate())) {
+            await User.update({_id: userObject._id}, {lastTokenCreationDate: new Date(), remaining: 80000})
+            req.remainingReset = true
+        }
+
+        else if (userObject.remaining < 0) {
             return res.status(402).json("You have exceeded your API calling rate!")
         }
         next()
