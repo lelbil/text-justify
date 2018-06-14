@@ -14,7 +14,7 @@ exports.justify = text => {
         words.forEach(word => {
             //if line + word exceed characters limit, then add the missing spaces randomly between words
             if (line.length + word.length >= CHARACTERS_LIMIT) { //Not forgetting the space between the end of the line and the word
-                lines.push(completeLineWithRandomSpaces(line))
+                lines.push(exports.completeLineWithRandomSpaces(line))
                 line = word
             }
             else {
@@ -24,7 +24,7 @@ exports.justify = text => {
         })
 
         const lastLine = line === '' ? lines[lines.length - 1] : line
-        lines[lines.length === 0 ? 0 : lines.length - 1] = completeLineWithRandomSpaces(lastLine)
+        lines[lines.length === 0 ? 0 : lines.length - 1] = exports.completeLineWithRandomSpaces(lastLine)
 
         justifiedParagraphs.push(lines.join('\n'))
     })
@@ -33,8 +33,11 @@ exports.justify = text => {
 
 }
 
-const completeLineWithRandomSpaces = line => {
+exports.completeLineWithRandomSpaces = line => {
     const lineArray = line.split(' ')
+    if (lineArray.length === 1) {
+        return line
+    }
     for (let i = 0; i < CHARACTERS_LIMIT - line.length; i++) {
         const randomIndex = Math.floor((Math.random() * (lineArray.length - 1)) + 1)
         lineArray.splice(randomIndex, 1, ` ${lineArray[randomIndex]}`)
